@@ -17,3 +17,7 @@ base App/ [Google AdMob Native Ad](https://github.com/googlecodelabs/admob-nativ
 <img width="100%" src="https://pythonchannel.com/media/github/Android-JSON-Feed-AdMob-Native.jpg">
 
 [上記イメージのプロジェクト](https://github.com/oshimamasara/AndroidXML-JSON-Convert-SAVE-JSON-Internal-Read-JSON-Sub-List-SHOW-Feed-Style-RecyclerView/tree/5fce23e325ae75299c159900a84f83758bafac50)
+
+#### had better
+
+https://developer.android.com/training/animation/reveal-or-hide-view
