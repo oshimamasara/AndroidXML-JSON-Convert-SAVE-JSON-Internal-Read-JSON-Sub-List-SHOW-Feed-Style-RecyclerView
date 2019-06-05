@@ -16,12 +16,14 @@
 package com.oshimamasara.getjson001;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
+import com.oshimamasara.getjson001.ItemClickListener;
 
 import java.util.List;
 
@@ -38,7 +40,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     // The list of menu items.
     private final List<Object> mRecyclerViewItems;
-
+    private ItemClickListener itemClickListener;
     /**
      * For this example app, the recyclerViewItems list contains only
      * {@link MenuItem} types.
@@ -52,7 +54,8 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
      * The {@link MenuItemViewHolder} class.
      * Provides a reference to each view in the menu item view.
      */
-    public class MenuItemViewHolder extends RecyclerView.ViewHolder {
+    public class MenuItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener{
+        private ItemClickListener itemClickListener;
         private TextView menuItemTitle;
         private TextView menuItemPubDate;
         private TextView menuItemDescription;
@@ -72,6 +75,25 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             //menuItemPrice = (TextView) view.findViewById(R.id.menu_item_price);
             //menuItemCategory = (TextView) view.findViewById(R.id.menu_item_category);
             menuItemDescription = (TextView) view.findViewById(R.id.menu_item_description);
+
+            itemView.setOnClickListener((View.OnClickListener) this);
+            itemView.setOnLongClickListener((View.OnLongClickListener) this);
+
+        }
+
+        public void setItemClickListener(ItemClickListener itemClickListener) {
+            this.itemClickListener = itemClickListener;
+        }
+
+        @Override
+        public void onClick(View view) {
+            itemClickListener.onClick(view,getAdapterPosition(),false);
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            itemClickListener.onClick(view,getAdapterPosition(),true);
+            return true;
         }
     }
 
@@ -105,7 +127,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         MenuItemViewHolder menuItemHolder = (MenuItemViewHolder) holder;
-        MenuItem menuItem = (MenuItem) mRecyclerViewItems.get(position);
+        final MenuItem menuItem = (MenuItem) mRecyclerViewItems.get(position);
 
         // Get the menu item image resource ID.
         //String imageName = menuItem.getImageName();
@@ -118,5 +140,19 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         menuItemHolder.menuItemPubDate.setText(menuItem.getPubDate());
         //menuItemHolder.menuItemCategory.setText(menuItem.getCategory());
         menuItemHolder.menuItemDescription.setText(menuItem.getDescription());
+
+
+        // Tap Event
+        menuItemHolder.setItemClickListener(new ItemClickListener() {
+            @Override
+            public void onClick(View view, int position, boolean isLongClick) {
+                if(!isLongClick)
+                {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(menuItem.getLink()));
+                    mContext.startActivity(browserIntent);
+                }
+            }
+        });
+
     }
 }

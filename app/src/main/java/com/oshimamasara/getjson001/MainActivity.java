@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.MobileAds;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
@@ -51,22 +52,19 @@ public class MainActivity extends AppCompatActivity {
             Fragment loadingScreenFragment = new LoadingScreenFragment();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.add(R.id.fragment_container, loadingScreenFragment);
-
             // Commit the transaction.
             transaction.commit();
-
             // XML - JSON, SAVE Json File
             xmljson();
-
-
-
             // Update the RecyclerView item's list with menu items.
             addMenuItemsFromJson();
             Log.i(TAG,"リスト"+mRecyclerViewItems);
-
-
             loadMenu();
 
+
+            // AdMob
+            // Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
+            MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
 
         }
     }
@@ -128,8 +126,9 @@ public class MainActivity extends AppCompatActivity {
                 String menuItemTitle = menuItemObject.getString("title");
                 String menuPubDate = menuItemObject.getString("pubDate");
                 String menuDescription = menuItemObject.getString("description");
+                String menuItemLink = menuItemObject.getString("link");
 
-                MenuItem menuItem = new MenuItem(menuItemTitle,menuPubDate,menuDescription);
+                MenuItem menuItem = new MenuItem(menuItemTitle,menuPubDate,menuDescription,menuItemLink);
                 mRecyclerViewItems.add(menuItem);
                 //}
             //} catch(IOException | JSONException exception){

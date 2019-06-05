@@ -29,11 +29,13 @@ class MenuItem {
     private final String title;
     private final String pubDate;
     private final String description;
+    private final String link;
 
-    public MenuItem(String title,String pubDate, String description) {
+    public MenuItem(String title,String pubDate, String description, String link) {
         this.title = title;
         this.pubDate=pubDate;
         this.description = description;
+        this.link=link;
         //this.price = price;
         //this.category = category;
         //this.imageName = imageName;
@@ -48,6 +50,10 @@ class MenuItem {
 
     public String getDescription(){
         return description;
+    }
+
+    public String getLink(){
+        return link;
     }
 
     //public String getName() {
