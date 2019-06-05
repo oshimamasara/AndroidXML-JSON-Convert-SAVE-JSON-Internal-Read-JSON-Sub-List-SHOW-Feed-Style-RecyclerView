@@ -9,7 +9,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
@@ -34,6 +38,12 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "Main";
     private Object IOException;
 
+    // Admob
+    public static final int NUMBER_OF_ADS = 1;
+    private AdLoader adLoader;
+    private List<UnifiedNativeAd> mNativeAds = new ArrayList<>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -43,11 +53,6 @@ public class MainActivity extends AppCompatActivity {
         final Button btn = findViewById(R.id.button);
 
         if (savedInstanceState == null) {
-            //グルグルマーク
-            //Fragment loadingScreenFragment = new LoadingScreenFragment();
-            //FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            //transaction.add(R.id.fragment_container, loadingScreenFragment);
-            //transaction.commit();
 
             // XML - JSON, SAVE Json File
             xmljson();
@@ -57,9 +62,11 @@ public class MainActivity extends AppCompatActivity {
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    loadNativeAds();
                     addMenuItemsFromJson();
                     loadMenu();
-                    btn.setVisibility(View.INVISIBLE);
+
+                    btn.setVisibility(View.INVISIBLE); //タップでボタン非表示に
                 }
             });
 
@@ -69,6 +76,48 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void loadNativeAds() {
+        AdLoader.Builder builder = new AdLoader.Builder(this, getString(R.string.ad_unit_id));
+        adLoader = builder.forUnifiedNativeAd(
+                new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
+                    @Override
+                    public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
+                        mNativeAds.add(unifiedNativeAd);
+                        if (!adLoader.isLoading()) {
+                            insertAdsInMenuItems();
+                        }
+                    }
+                }).withAdListener(
+                new AdListener() {
+                    @Override
+                    public void onAdFailedToLoad(int errorCode) {
+                        Log.e("MainActivity", "The previous native ad failed to load. Attempting to"
+                                + " load another.");
+                        if (!adLoader.isLoading()) {
+                            insertAdsInMenuItems();
+                        }
+                    }
+                }).build();
+
+        // 広告表示
+        adLoader.loadAds(new AdRequest.Builder().build(), NUMBER_OF_ADS);
+    }
+
+
+    // 広告の表示サイクルに関するプログラム
+    private void insertAdsInMenuItems() {
+        if (mNativeAds.size() <= 0) {
+            return;
+        }
+
+        int offset = (mRecyclerViewItems.size() / mNativeAds.size()) + 1;
+        int index = 5; // 表示箇所
+        for (UnifiedNativeAd ad : mNativeAds) {
+            mRecyclerViewItems.add(index, ad);
+            index = index + offset;
+        }
+        loadMenu();
+    }
 
 
     public List<Object> getRecyclerViewItems() {
