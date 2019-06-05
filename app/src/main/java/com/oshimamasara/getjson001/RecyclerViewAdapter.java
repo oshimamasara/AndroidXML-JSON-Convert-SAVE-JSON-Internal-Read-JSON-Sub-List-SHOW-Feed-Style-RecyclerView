@@ -74,7 +74,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         //private TextView menuItemCategory;
         //private ImageView menuItemImage;
 
-        MenuItemViewHolder(View view) {
+        MenuItemViewHolder(View view)  {
             super(view);
             menuItemTitle = (TextView) view.findViewById(R.id.menu_item_title);
             menuItemPubDate = (TextView) view.findViewById(R.id.menu_item_pubDate);
@@ -159,11 +159,23 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 // fall through
             default:
                 MenuItemViewHolder menuItemHolder = (MenuItemViewHolder) holder;
-                MenuItem menuItem = (MenuItem) mRecyclerViewItems.get(position);
+                final MenuItem menuItem = (MenuItem) mRecyclerViewItems.get(position);
 
                 menuItemHolder.menuItemTitle.setText(menuItem.getTitle());
                 menuItemHolder.menuItemPubDate.setText(menuItem.getPubDate());
                 menuItemHolder.menuItemDescription.setText(menuItem.getDescription());
+
+                // Tap Event
+                menuItemHolder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+                        if(!isLongClick)
+                        {
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(menuItem.getLink()));
+                            mContext.startActivity(browserIntent);
+                        }
+                    }
+                });
         }
     }
 
