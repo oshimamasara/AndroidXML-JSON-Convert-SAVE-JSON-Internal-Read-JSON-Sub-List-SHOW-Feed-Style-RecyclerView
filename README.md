@@ -8,3 +8,8 @@
 + とりあえず フィードスタイル　で出力
 
 base App/ [Google AdMob Native Ad](https://github.com/googlecodelabs/admob-native-advanced-feed/tree/master/android/final/NativeAdvancedRecyclerViewExample)
+
+
++ AdMobのネイティブ広告をフィード内に埋め込み
+
+<img width="100%" src="https://pythonchannel.com/media/github/Android-JSON-Feed-AdMob-Native.jpg">
