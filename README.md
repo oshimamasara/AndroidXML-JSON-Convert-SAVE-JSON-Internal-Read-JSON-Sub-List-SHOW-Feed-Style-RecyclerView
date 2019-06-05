@@ -6,3 +6,5 @@
 + フィードスタイルに合うように JSON の型を制御
 + 広告挿入　前提のため　Fragment 処理
 + とりあえず フィードスタイル　で出力
+
+base App/ [Google AdMob Native Ad](https://github.com/googlecodelabs/admob-native-advanced-feed/tree/master/android/final/NativeAdvancedRecyclerViewExample)
